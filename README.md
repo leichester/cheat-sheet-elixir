@@ -1223,7 +1223,8 @@ end
 defmodule Meal do
   use Fruit, option: :hello
 end
-#=> "Good to see you've added Fruit to your meal"
+#=> options=:hello
+#=> Using Fruit module
 ```
 `import Module` brings all the Functions and Macros of Module un-namespaced into your module.
 
