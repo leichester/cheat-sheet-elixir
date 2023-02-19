@@ -865,7 +865,7 @@ calc = fn
   x, y -> x * y
 end
 calc.(-1, 6) #=> 5
-calc.(4, 5) #=> 45
+calc.(9, 5) #=> 45
 ```
 
 ## Modules And Named Functions
