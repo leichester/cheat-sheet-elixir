@@ -434,7 +434,7 @@ Tuple is a list that is stored contiguously in memory.
 
 ## Lists
 
-**Lists** implements Enumerables protocol.
+**Lists** implements `Enumerable` protocol.
 
 List is a linked list structure where each element points to the next one in memory. When subtraction just the first ocurrence will be removed.
 
@@ -513,7 +513,7 @@ Keyword list is a list of tuples where first elements are atoms. When fetching b
 
 ## Maps
 
-**Maps** implements Enumerables protocol.
+**Maps** implements `Enumerable` protocol.
 
 Map holds a key value structure.
 
@@ -570,7 +570,7 @@ Ranges are `Struct`.
 - `Enum.member?(range, 11) #=> false`
 
 ## Protocols
-
+Protocols allow us to extend the original behaviour for as many data types as we need. 
 - `defprotocol Foo` => define protocol `Foo`
 - `defimpl Foo, for Integer` => implement that protocol for `Integer`
 
