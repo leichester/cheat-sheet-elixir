@@ -1007,7 +1007,7 @@ end
 
 **Exceptions/Errors** in Elixir are `Structs`.
 
-- `raise "oops" #=> ** (RuntimeError) oops` => raises error with message
+- `raise "oops" #=> ** (RuntimeError) oops` => raises runtime error
 - `raise ArgumentError #=> ** (ArgumentError) argument error` => raises an error by module
 - `raise ArgumentError, message: "oops" #=> ** (ArgumentError) oops` => raises an error by module with message
 - `defexception` => define an exception
@@ -1038,6 +1038,7 @@ rescue
 after
   IO.puts "I can do some clean up here"
 end
+#=> I can do some clean up here
 #=> %RuntimeError{message: "oops"}
 
 try do
@@ -1085,7 +1086,8 @@ after
   IO.puts "cleaning up!"
 end
 ```
-
+In practice, Elixir developers rarely use the try/rescue construct. Some functions(eg: `File.read/1`) return tuple `{:error, reason}`. If want to raise exception, there is `File.read!/1`.
+“fail fast” / “let it crash” is a way of saying in Erlang/Elixir community. When something unexpected happens, it is best to start from scratch within a new process, freshly started by a supervisor, rather than blindly trying to rescue all possible error cases without the full context of when and how they can happen.
 ## IO
 
 - `IO.puts/1 "Hello"` => prints to stdout
