@@ -130,11 +130,11 @@ h Math.sum
 
 - `true` => boolean (atom)
 
-### BitString
+<!-- ### BitString
 
 - `<<97::size(2)>>` => bit string
 - `<<97,98>>` => binary
-- `"elixir"` => string
+- `"elixir"` => string -->
 
 ### Tuple
 
@@ -358,7 +358,7 @@ Available delimiters for `Sigil`: `/`, `|`, `"`, `'`, `(`, `[`, `{`, `<`.
 ~w(one two three)a #=> [:one, :two, :three]
 ```
 
-## Bit Strings
+<!-- ## Bit Strings
 
 - `<<97::4>>` => short notation with 4 bits
 - `<<97::size(4)>>` => long notation with 4 bits
@@ -386,7 +386,7 @@ Binaries are 8 bits multiple Bit Strings. Binaries are 8 bits by default.
 
 - `byte_size(<<97>>)`
 
-#### expensive functions:
+#### expensive functions: -->
 
 ## Strings
 
@@ -461,7 +461,7 @@ List is a linked list structure where each element points to the next one in mem
 - `length([1, 4])`
 - `:foo in [:foo, :bar] #=> true` => in operator
 
-## Char List
+<!-- ## Char List
 
 A Char List is a List of code points where all elements are valid characters. Char Lists are surrounded by single-quote and are usually used as arguments to some old Erlang code.
 
@@ -484,7 +484,7 @@ A Char List is a List of code points where all elements are valid characters. Ch
 - `'hello' ++ 'world' # 'helloworld'` => concatenation
 - `'hello' -- 'world' # 'hel'` => subtraction first occurrences
 - `length('Hello')`
-- `?l in 'hello' #=> true` => in operator
+- `?l in 'hello' #=> true` => in operator -->
 
 ## Keyword Lists
 
@@ -1049,7 +1049,7 @@ end
 #=> "Error!"
 ```
 
-`throw/catch` sometime is used for circuit breaking, but you can usually use another better way:
+`throw/catch` sometime is used for circuit breaking/controlling the flow, but you can usually use another better way:
 
 ```elixir
 try do
@@ -1077,7 +1077,7 @@ end
 #=> "not really"
 ```
 
-You can ommit `try` inside functions and use `rescue`, `catch`, `after` directly:
+<!-- You can ommit `try` inside functions and use `rescue`, `catch`, `after` directly:
 
 ```elixir
 def without_even_trying do
@@ -1085,10 +1085,7 @@ def without_even_trying do
 after
   IO.puts "cleaning up!"
 end
-```
-<!-- In practice, Elixir developers rarely use the try/rescue construct. Some functions(eg: `File.read/1`) return tuple `{:error, reason}`. If want to raise exception, there is `File.read!/1`. -->
-
-“fail fast” / “let it crash” is a way of saying in Erlang/Elixir community. When something unexpected happens, it is best to start from scratch within a new process, freshly started by a supervisor, rather than blindly trying to rescue all possible error cases without the full context of when and how they can happen.
+``` -->
 ## IO
 
 - `IO.puts/1 "Hello"` => prints to stdout
