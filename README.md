@@ -988,14 +988,17 @@ Behaviour modules defines functions
 
 ```elixir
 defmodule Parser do
-  @callback parse(String.t) :: any
+  @callback parse(String.t) :: {:ok, term} | {:error, String.t}
   @callback extensions() :: [String.t]
 end
 
 defmodule JSONParser do
   @behaviour Parser
+  
+  @impl Parser
+  def parse(str), do: {:ok, "some json " <> str} # ... parse JSON
 
-  def parse(str), do: # ... parse JSON
+  @impl Parser
   def extensions, do: ["json"]
 end
 ```
