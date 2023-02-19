@@ -177,8 +177,6 @@ h Math.sum
 - `is_number 7.8`
 - `is_atom :foo`
 - `is_boolean false`
-- `is_bitstring <<97:2>>`
-- `is_binary <<97, 98>>`
 - `is_list/1`
 - `is_tuple/1`
 - `is_map/1`
@@ -191,8 +189,6 @@ h Math.sum
 
 ## Converting Types
 
-- `to_char_list("hełło")` => convert a string to char list
-- `to_string('hełło')` => convert a char list to string
 - `Map.to_list(%{:a => 1, 2 => :b})` => convert a map to list of tuples or keyword list
 
 ## Number Operators
@@ -250,12 +246,6 @@ This powerful tool is also used to decompose complex objects like tuples, lists,
 x = 1 #=> assign 1 to x
 2 = x #=> ** (MatchError)
 1 = x #=> match and does not assign anything
-
-<<0, 1, x>> = <<0, 1, 2, 3>> #=> ** (MatchError)
-<<0, 1, x::binary>> = <<0, 1, 2, 3>>
-<<0, 1>> <> <<x::binary>> = <<0, 1, 2, 3>>
-<<0, 1>> <> <<x, y>> = <<0, 1, 2, 3>>
-<<0, 1>> <> <<x>> <> <<y>> = <<0, 1, 2, 3>>
 
 "world" <> x = "hello" #=> ** (MatchError)
 "he" <> x = "hello"
@@ -393,9 +383,6 @@ Binaries are 8 bits multiple Bit Strings. Binaries are 8 bits by default.
 String is a Binary of code points where all elements are valid characters. Strings are surrounded by double-quotes and are encoded in `UTF-8` by default.
 
 - `"hello"` => string
-- `<<97, 98>>` => string "ab"
-- `<<?a, ?b>>` => string "ab"
- `?x` => code points (ASCII code) for letter `x`
 - `"hello #{:world}"` => string interpolation
 - `"\n"` => new line
 - `String.length("hello") #=> 5` => get the length of a string
