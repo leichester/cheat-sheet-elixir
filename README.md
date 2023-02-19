@@ -1143,7 +1143,6 @@ We spawn processes as linked processes.
 - `spawn_link/1` => forks a process and link them, so failures are propagated
 - `Task.start/1` => starts a task
 - `Task.start_link/1` => starts a task and link it to the current process
-- `Process.register(pid, :foo)` => register a name(:foo) for a process
 
 Tasks build on top of the spawn functions to provide better error reports and introspection. Tasks can be used in supervision trees.
 
@@ -1160,9 +1159,7 @@ flush()
 ```
 ## State
 
-**State** can be stored in processes.
-
-Manual implementation of a storage using Elixir processes that loop infinitely, maintain state, and send and receive messages.:
+State can be stored in processes. Manual implementation of a storage using Elixir processes that loop infinitely, maintain state, and send and receive messages.:
 
 ```elixir
 defmodule KV do
@@ -1185,6 +1182,14 @@ end
 send pid, {:put, :hello, :world}
 send pid, {:get, :hello, self()}
 flush() #=> :world
+```
+It is also possible to register the pid, giving it a name, and allowing everyone that knows the name to send it messages:
+- `Process.register(pid, :foo)` => register a name(:foo) for a process
+
+```elixir
+Process.register(pid, :kv)
+send(:kv, {:get, :hello, self()})
+flush()
 ```
 ## Agent
 
