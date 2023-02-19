@@ -967,7 +967,9 @@ IO.puts Concat.join("Hello", "world", "_") #=> Hello_world
 When capturing you can use the function/operator with its arity.
 
 ```elixir
-&(&1 * &2).(3, 4) #=> 12
+a = &(&1 * &2)
+a.(3, 4) #=> 12
+(&(&1 * &2)).(3, 4) #=> 12
 (&*/2).(3, 4) #=> 12
 
 (&Kernel.is_atom(&1)).(:foo) #=> true
