@@ -1116,7 +1116,7 @@ File.read "my-file.md" #=> {:ok, "hello world"}
 - `Path.join` => joins
 - `Path.expand("~/hello")` => expands to full path
 
-## Processes, Tasks and Agents
+## Processes, Tasks
 
 Process in Elixir has the same concept as threads in a lot of other languages, but extremely lightweight in terms of memory and CPU. They are isolated from each other and communicate via message passing.
 
@@ -1126,15 +1126,26 @@ Process in Elixir has the same concept as threads in a lot of other languages, b
 - `send/2` => send message to another process
 - `receive/1` => receive message from another process
 - `after` => receive option to work with timeout
-- `flush()` => prints out all messages received
+- `flush()` => prints out and clean all messages received
+
+```elixir
+parent = self()
+pid = spawn(fn -> send(parent, {:hello, self()}) end)
+Process.alive?(pid)
+#=> false    #The spawned process will execute the given function and exit after the function is done
+receive do
+  {:hello, pid} -> "Got hello from #{inspect pid}"
+after 
+  1_000 -> "nothing after 1s, time out"
+end
+```
+We spawn processes as linked processes. 
 - `spawn_link/1` => forks a process and link them, so failures are propagated
 - `Task.start/1` => starts a task
 - `Task.start_link/1` => starts a task and link it to the current process
-- `Process.register(pid, :foo)` => register a name for a process
+- `Process.register(pid, :foo)` => register a name(:foo) for a process
 
-The idea is to have a supervisor that `spawn_link` new processes and when they fail the supervisor will restart them. This is the basics for **Fail Fast** and **Fault Tolerant** in Elixir.
-
-Tasks are used in supervision trees.
+Tasks build on top of the spawn functions to provide better error reports and introspection. Tasks can be used in supervision trees.
 
 ```elixir
 parent = self()
@@ -1147,10 +1158,11 @@ receive do: ({msg, pid} -> "#{inspect pid} => #{msg}"), after: (1_000 -> "nothin
 
 flush()
 ```
+## State
 
-**State** can be stored in processes or using its abstraction: `Agent`.
+**State** can be stored in processes.
 
-Manual implementation of a storage using Elixir processes:
+Manual implementation of a storage using Elixir processes that loop infinitely, maintain state, and send and receive messages.:
 
 ```elixir
 defmodule KV do
@@ -1174,7 +1186,9 @@ send pid, {:put, :hello, :world}
 send pid, {:get, :hello, self()}
 flush() #=> :world
 ```
+## Agent
 
+Elixir provides agents, which are simple abstractions around state.
 Implementation of a storage using `Agent`:
 
 ```elixir
