@@ -1086,8 +1086,8 @@ after
   IO.puts "cleaning up!"
 end
 ```
-In practice, Elixir developers rarely use the try/rescue construct. Some functions(eg: `File.read/1`) return tuple `{:error, reason}`. If want to raise exception, there is `File.read!/1`.
-[//]: # (This may be the most platform independent comment)
+<!-- In practice, Elixir developers rarely use the try/rescue construct. Some functions(eg: `File.read/1`) return tuple `{:error, reason}`. If want to raise exception, there is `File.read!/1`. -->
+
 “fail fast” / “let it crash” is a way of saying in Erlang/Elixir community. When something unexpected happens, it is best to start from scratch within a new process, freshly started by a supervisor, rather than blindly trying to rescue all possible error cases without the full context of when and how they can happen.
 ## IO
 
