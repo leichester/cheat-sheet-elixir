@@ -797,7 +797,7 @@ Enum.map([1, 2, 3], &(&1 * 2)) #=> [2, 4, 6]
 `Comprehension` is a syntax sugar for the very powerful `for special form`. You can have **generators** and **filters** in that.
 
 - `for` => `Comprehension`
-- `->` => **generators**
+- `<-` => **generators**
 - `:into` => change return to another `Collectable` type
 
 You can iterate over `Enumerable` what makes so close to a regular `for` loop on other languages:
@@ -822,7 +822,7 @@ for {:good, n} <- values, do: n * n
 #=> [1, 4, 16]
 ```
 
-Generators use `->` and they have on the right an `Enumerable` and on the left a **pattern matchable** element variable.
+Generators use `<-` and they have on the right an `Enumerable` and on the left a **pattern matchable** element variable.
 
 You can have **filters** to filter **truthy** elements:
 
@@ -861,7 +861,7 @@ We can have multiple clauses and guards inside functions.
 
 ```elixir
 calc = fn
-  x, y when x > 0 -> x + y
+  x, y when x < 0 -> x + y
   x, y -> x * y
 end
 calc.(-1, 6) #=> 5
