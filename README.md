@@ -1062,6 +1062,8 @@ Enum.find -50..50, &(rem(&1, 13) == 0)
 #=> -39
 ```
 
+When a process dies of “natural causes” (e.g., unhandled exceptions), it sends an `exit` signal. A process can also die by explicitly sending an `exit` signal: `spawn_link(fn -> exit(1) end)`
+
 `exit` can be caught but this is rare in Elixir:
 
 ```elixir
