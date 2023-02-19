@@ -1082,7 +1082,7 @@ after
   IO.puts "cleaning up!"
 end
 ``` -->
-variables defined inside try/catch/rescue/after blocks do not leak to the outer context.
+Variables defined inside `try/catch/rescue/after` blocks do not leak to the outer context.
 ## IO
 
 - `IO.puts/1 "Hello"` => prints to stdout
