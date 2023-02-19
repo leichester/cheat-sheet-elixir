@@ -1015,6 +1015,7 @@ end
 - `throw/try/catch` => can be used as circuit breaking, but should be avoided
 - `exit("my reason")` => exiting current process
 - `after` => ensures some resource is cleaned up even if an exception was raised
+- `else` => match on the results of the try block whenever the try block finishes without a throw or an error
 
 ```elixir
 defmodule MyError do
@@ -1035,18 +1036,13 @@ try do
   raise "oops"
 rescue
   e in RuntimeError -> e
+else 
+  IO.puts "can't be reached in this ex."
 after
   IO.puts "I can do some clean up here"
 end
 #=> I can do some clean up here
 #=> %RuntimeError{message: "oops"}
-
-try do
-  raise "oops"
-rescue
-  RuntimeError -> "Error!"
-end
-#=> "Error!"
 ```
 
 `throw/catch` sometime is used for circuit breaking/controlling the flow, but you can usually use another better way:
@@ -1086,6 +1082,7 @@ after
   IO.puts "cleaning up!"
 end
 ``` -->
+variables defined inside try/catch/rescue/after blocks do not leak to the outer context.
 ## IO
 
 - `IO.puts/1 "Hello"` => prints to stdout
