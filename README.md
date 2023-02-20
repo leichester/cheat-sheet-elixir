@@ -2,7 +2,7 @@
 
 ```elixir
 elixir -v
-1.3.1
+1.14.2
 ```
 
 Elixir is a dynamic functional compiled language that runs over an Erlang Virtual Machine called BEAM.
@@ -1187,8 +1187,45 @@ Implementation of a storage using `Agent`:
 {:ok, pid} = Agent.start_link(fn -> %{} end)
 Agent.update(pid, fn map -> Map.put(map, :hello, :world) end)
 Agent.get(pid, fn map -> Map.get(map, :hello) end)
+Agent.stop(pid)
 ```
+- `Agent.start_link/1` => receives an anonymous function that returns the Agent’s initial state.
+- `Agent.update/3` => second argument is a function that takes the agent’s current state as input and returns its desired new state.
+- `Agent.get/3` => second argument is a function that takes the state as input and returns the value that `Agent.get/3` itself will return.
+- `Agent.stop/3` => terminate the agent process.
+- `Agent.get_and_update/2` => get a value and update the agent state in one function
 
+## Mix
+
+Mix is a build tool that ships with Elixir that provides tasks for creating, compiling, testing your application, managing its dependencies and much more
+
+- `mix new` => create project 
+- `mix compile` => compile project
+- `mix test` => run test
+- `mix format` => format project using `.formatter.exs` file
+- `mix help` => help
+
+Once the project is compiled, start an iex session inside the project by `iex -S mix`
+recompile the project from within iex with the `recompile()` helper
+
+## ExUnit
+Test-unit based framework that ships with Elixir
+
+- The test file is an Elixir script file (`.exs`)
+- `use ExUnit.Case` to inject the testing API
+- A setup callback with the help of the `setup/1` macro. The `setup/1` macro defines a callback that is run before every test, in the same process as the test itself.
+- When we return a map from the callback, ExUnit will merge this map into the test context. Since the test context is a map itself, we can pattern match in `test/2`'s second argument
+- Running `mix test`, Mix has compiled the source files and generated the application manifest once again.
+- `mix test test/kv_test.exs:5` Mix will load and run just that particular test
+
+## Environments
+
+- `:dev` - the one in which Mix tasks (like compile) run by default
+- `:test` - used by mix test
+- `:prod` - the one you will use to run your project in production
+
+`Mix.env()` returns the current environment as an atom, can be used in .ex/.exs file 
+Mix will default to the `:dev` environment, except for the test task that will default to the `:test` environment. The environment can be changed via the MIX_ENV environment variable: `MIX_ENV=prod mix compile` in command line
 ## alias, require, import and use
 
 In order to facilitate code reuse Elixir has: `alias`, `require`, `import` (directives) and `use` (macro).
