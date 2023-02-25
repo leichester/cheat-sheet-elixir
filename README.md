@@ -1299,6 +1299,13 @@ function:
 
 Once the supervisor starts, it will traverse the list of children and it will invoke the `child_spec/1` function on each module. The `child_spec/1` function is automatically defined when we `use Agent`, `use GenServer`, `use Supervisor`. After the supervisor retrieves all child specifications, it proceeds to start its children one by one, in the order they were defined. Supervisor automatically starts a broken child.
 
+## Application
+
+Applications are the idiomatic way to package software in Erlang/OTP. To get the idea, they are similar to the "library" concept common in other programming languages, but with some additional characteristics.
+
+An application is a component implementing some specific functionality, with a standardized directory structure, configuration, and life cycle. Applications are loaded, started, and stopped. Each application also has its own environment, which provides a unified API for configuring each application.
+
+We define an application callback to customize what happens when our application starts. The `:mod` option in `mix.exs` `application` function specifies the “application callback module”, followed by the arguments to be passed on application start.
 
 ## Mix
 
