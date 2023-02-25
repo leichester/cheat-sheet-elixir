@@ -130,6 +130,7 @@ h Math.sum
 
 - `true` => boolean (atom)
 
+Atoms are not garbage collected. Once an atom is created, it is never reclaimed.
 <!-- ### BitString
 
 - `<<97::size(2)>>` => bit string
@@ -1195,6 +1196,76 @@ Agent.stop(pid)
 - `Agent.stop/3` => terminate the agent process.
 - `Agent.get_and_update/2` => get a value and update the agent state in one function
 
+## GenServer
+
+A behaviour module for implementing the server of a client-server relation.
+
+A GenServer is a process like any other Elixir process and it can be used to keep state, execute code asynchronously and so on. The advantage of using a generic server process (GenServer) implemented using this module is that it will have a standard set of interface functions and include functionality for tracing and error reporting. It will also fit into a supervision tree.
+
+There are two types of requests you can send to a GenServer: calls and casts. Calls are synchronous. Casts are asynchronous. 
+
+Callbacks(server side):
+- `init(init_arg)` Invoked when the server is started. Returning `{:ok, state}` will cause `start_link/3` to return `{:ok, pid}`
+- `handle_call(request, from, state)` Invoked to handle synchronous `call/3` messages. `request` is the request message sent by a `call/3`, `request` is often specified as tuples. `from` is a 2-tuple containing the callers PID and a term that uniquely identifies the call, and `state` is the current state of the GenServer.
+- `handle_cast(request, state)` Invoked to handle asynchronous `cast/2` messages. `request` is the request message sent by a `cast/2` and `state` is the current state of the GenServer. Returning `{:noreply, new_state}` continues the loop with new state new_state.
+- `handle_info(msg, state)` Invoked to handle all other messages. `msg` is the message and `state` is the current state of the GenServer. Return values are the same as `handle_cast/2`.  
+
+functions(client side): 
+- `start_link(module, init_arg, options \\ [])` Starts a GenServer process linked to the current process. This is often used to start the GenServer as part of a supervision tree. Once the server is started, the `init/1` function of the given module is called with `init_arg` as its argument to initialize the server. To ensure a synchronized start-up procedure, this function does not return until `init/1` has returned.
+- `call(server, request, timeout \\ 5000)` Makes a synchronous call to the server and waits for its reply. `handle_call/3` will be called on the server to handle the request.
+- `cast(server, request)` Sends an asynchronous request to the server.This function always returns `:ok` regardless of whether the destination server (or node) exists.
+
+Add @impl true before each callback
+
+```elixir
+defmodule KV.Registry do
+  use GenServer
+
+  ## Client API 
+
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, :ok, opts)
+  end
+
+  @doc """
+  Looks up the bucket pid for `name` stored in `server`.
+  Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
+  """
+  def lookup(server, name) do
+    GenServer.call(server, {:lookup, name})
+  end
+
+  @doc """
+  Ensures there is a bucket associated with the given `name` in `server`.
+  """
+  def create(server, name) do
+    GenServer.cast(server, {:create, name})
+  end
+
+  ## Defining GenServer Callbacks
+
+  @impl true
+  def init(:ok) do
+    {:ok, %{}}
+  end
+
+  @impl true
+  def handle_call({:lookup, name}, _from, names) do
+    {:reply, Map.fetch(names, name), names}
+  end
+
+  @impl true
+  def handle_cast({:create, name}, names) do
+    if Map.has_key?(names, name) do
+      {:noreply, names}
+    else
+      {:ok, bucket} = KV.Bucket.start_link([])
+      {:noreply, Map.put(names, name, bucket)}
+    end
+  end
+end
+```
+cheat sheet: https://elixir-lang.org/downloads/cheatsheets/gen-server.pdf
 ## Mix
 
 Mix is a build tool that ships with Elixir that provides tasks for creating, compiling, testing your application, managing its dependencies and much more
@@ -1226,6 +1297,7 @@ Test-unit based framework that ships with Elixir
 
 `Mix.env()` returns the current environment as an atom, can be used in .ex/.exs file 
 Mix will default to the `:dev` environment, except for the test task that will default to the `:test` environment. The environment can be changed via the MIX_ENV environment variable: `MIX_ENV=prod mix compile` in command line
+
 ## alias, require, import and use
 
 In order to facilitate code reuse Elixir has: `alias`, `require`, `import` (directives) and `use` (macro).
