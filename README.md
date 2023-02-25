@@ -1115,6 +1115,7 @@ Process in Elixir has the same concept as threads in a lot of other languages, b
 - `receive/1` => receive message from another process
 - `after` => receive option to work with timeout
 - `flush()` => prints out and clean all messages received
+- `Process.monitor(item)` => Starts monitoring the given item from the calling process.
 
 ```elixir
 parent = self()
@@ -1205,15 +1206,15 @@ A GenServer is a process like any other Elixir process and it can be used to kee
 There are two types of requests you can send to a GenServer: calls and casts. Calls are synchronous. Casts are asynchronous. 
 
 Callbacks(server side):
-- `init(init_arg)` Invoked when the server is started. Returning `{:ok, state}` will cause `start_link/3` to return `{:ok, pid}`
-- `handle_call(request, from, state)` Invoked to handle synchronous `call/3` messages. `request` is the request message sent by a `call/3`, `request` is often specified as tuples. `from` is a 2-tuple containing the callers PID and a term that uniquely identifies the call, and `state` is the current state of the GenServer.
-- `handle_cast(request, state)` Invoked to handle asynchronous `cast/2` messages. `request` is the request message sent by a `cast/2` and `state` is the current state of the GenServer. Returning `{:noreply, new_state}` continues the loop with new state new_state.
-- `handle_info(msg, state)` Invoked to handle all other messages. `msg` is the message and `state` is the current state of the GenServer. Return values are the same as `handle_cast/2`.  
+- `init(init_arg)` => Invoked when the server is started. Returning `{:ok, state}` will cause `start_link/3` to return `{:ok, pid}`
+- `handle_call(request, from, state)` => Invoked to handle synchronous `call/3` messages. `request` is the request message sent by a `call/3`, `request` is often specified as tuples. `from` is a 2-tuple containing the callers PID and a term that uniquely identifies the call, and `state` is the current state of the GenServer.
+- `handle_cast(request, state)` => Invoked to handle asynchronous `cast/2` messages. `request` is the request message sent by a `cast/2` and `state` is the current state of the GenServer. Returning `{:noreply, new_state}` continues the loop with new state new_state.
+- `handle_info(msg, state)` => Invoked to handle all other messages. `msg` is the message and `state` is the current state of the GenServer. Return values are the same as `handle_cast/2`.  
 
 functions(client side): 
-- `start_link(module, init_arg, options \\ [])` Starts a GenServer process linked to the current process. This is often used to start the GenServer as part of a supervision tree. Once the server is started, the `init/1` function of the given module is called with `init_arg` as its argument to initialize the server. To ensure a synchronized start-up procedure, this function does not return until `init/1` has returned.
-- `call(server, request, timeout \\ 5000)` Makes a synchronous call to the server and waits for its reply. `handle_call/3` will be called on the server to handle the request.
-- `cast(server, request)` Sends an asynchronous request to the server.This function always returns `:ok` regardless of whether the destination server (or node) exists.
+- `start_link(module, init_arg, options \\ [])` => Starts a GenServer process linked to the current process. This is often used to start the GenServer as part of a supervision tree. Once the server is started, the `init/1` function of the given module is called with `init_arg` as its argument to initialize the server. To ensure a synchronized start-up procedure, this function does not return until `init/1` has returned.
+- `call(server, request, timeout \\ 5000)` => Makes a synchronous call to the server and waits for its reply. `handle_call/3` will be called on the server to handle the request.
+- `cast(server, request)` => Sends an asynchronous request to the server.This function always returns `:ok` regardless of whether the destination server (or node) exists.
 
 Add @impl true before each callback
 
@@ -1266,6 +1267,39 @@ defmodule KV.Registry do
 end
 ```
 cheat sheet: https://elixir-lang.org/downloads/cheatsheets/gen-server.pdf
+
+## Supervisor
+
+A Supervisor is a process that supervises other processes and restarts them whenever they crash. To do so, Supervisors manage the whole life-cycle of any supervised processes, including startup and shutdown.
+
+```elixir
+defmodule KV.Supervisor do
+  use Supervisor
+
+  def start_link(opts) do
+    Supervisor.start_link(__MODULE__, :ok, opts)
+  end
+
+  @impl true
+  def init(:ok) do
+    children = [
+      {KV.Registry, name: KV.Registry}
+    ]
+
+    Supervisor.init(children, strategy: :one_for_one)
+  end
+end
+```
+
+Callback:
+- `init(init_arg)` => Callback invoked to start the supervisor and during hot code upgrades. Developers typically invoke `Supervisor.init/2` at the end of their init callback to return the proper supervision flags.
+function:
+- `init(children, options)` => This is typically invoked at the end of the `init/1` callback of module-based supervisors.
+- `which_children(supervisor)` => Returns a list with information about all children of the given supervisor.
+
+Once the supervisor starts, it will traverse the list of children and it will invoke the `child_spec/1` function on each module. The `child_spec/1` function is automatically defined when we `use Agent`, `use GenServer`, `use Supervisor`. After the supervisor retrieves all child specifications, it proceeds to start its children one by one, in the order they were defined. Supervisor automatically starts a broken child.
+
+
 ## Mix
 
 Mix is a build tool that ships with Elixir that provides tasks for creating, compiling, testing your application, managing its dependencies and much more
