@@ -100,6 +100,7 @@ h Math.sum
 - `iex` => open Interactive Elixir
 - `iex <file>` => open Interactive Elixir loading a file
 - `<Ctrl>c + <Ctrl>c` => close iex
+
 Inside iex
 - `i/1` => prints information about the given term
 - `h/0` => prints help message
