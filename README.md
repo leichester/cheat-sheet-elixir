@@ -99,14 +99,15 @@ h Math.sum
 
 - `iex` => open Interactive Elixir
 - `iex <file>` => open Interactive Elixir loading a file
-- `<Ctrl>c + a` => close iex
-- `i <object>` => information about an object
-- `h <function/arity>` => help for a function
-- `h <operator/arity>` => help for a operator
-- `s <function/arity>` => specification for a function
-- `s <operator/arity>` => specification for a operator
-- `t <function/arity>` => type for a function
-- `c <file>` => load and compile a `.ex` file
+- `<Ctrl>c + <Ctrl>c` => close iex
+Inside iex
+- `i/1` => prints information about the given term
+- `h/0` => prints help message
+- `h/1` => prints help for the given module, function or macro
+- `r/1` => recompiles the given module's source file
+- `c/1` => compiles a `.ex` file into the current directory
+- `recompile/0` => recompiles the current project
+- `v/1` => retrieves the nth value from the history
 
 ## Basic Types
 
