@@ -263,12 +263,12 @@ Falsy in Elixir is `false` and `nil`, otherwise will be truthy.
 - `not` => boolean not
 
 Boolean and Relaxed Boolean operators
-- `a ​or​ b     ​# true if a is true; otherwise b​` 
-​- `a ​and​ b    ​# false if a is false; otherwise b​`
-​- `​not​ a      ​# false if a is true; true otherwise`
+- `a ​or​ b     ​# true if a is true; otherwise b​`
+- `a ​and​ b    ​# false if a is false; otherwise b​`
+- `​not​ a      ​# false if a is true; true otherwise`
 - `a || b    ​# a if a is truthy; otherwise b​`
-​- `a && b    ​# b if a is truthy; otherwise a`​
-​- `​!​a        ​# false if a is truthy; otherwise true`
+- `a && b    ​# b if a is truthy; otherwise a`​
+- `​!​a        ​# false if a is truthy; otherwise true`
 
 If the types are the same or are compatible (for example, 3 > 2 or 3.0 < 5), the comparison uses natural ordering. Otherwise comparison is based on type according to this rule: `number < atom < reference < functions < port < pid < tuple < map < list < bit string`.
 
