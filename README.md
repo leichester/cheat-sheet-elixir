@@ -11,7 +11,7 @@ Erlang and its BEAM is well known for running low-lattency, distributed and faul
 
 Elixir was designed to take all that advantages in a modern coding language.
 
-Elixir data types are immutable.
+Elixir data types are immutable. The most complex nested list, the database record—these things behave just like the simplest integer. Their values are all immutable. Once a variable references a list such as `[1,2,3]`, you know it will always reference those same values (until you rebind the variable). Most compound data structures in most other programming languages are mutable—you can change all or part of their content.
 
 In Elixir a function is usually described with its arity (number of arguments), such as: `is_boolean/1`.
 
@@ -114,22 +114,33 @@ Inside iex
 
 ### Integer
 
+Arbitrary-sized 
 - `1` => integer
 - `1_000` => integers can use `_` to make it easy to read
-- `0x1F` => integer
 - `0b1010` => binary integer notation 10
 - `0o777` => octadecimal integer notation 511
 - `0x1F` => hexadecimal integer notation 31
 
 ### Float
 
+There must be at least one digit before and after the decimal point. Floats are IEEE 754 double precision.
 - `-1.0` => float
 - `5.7e-2` => float exponent notation 0.057
 
 ### Atom
 
-- `:atom` => atom / symbol
+We write them using a leading colon (:), which can be followed by an atom word or an Elixir operator. An atom word is a sequence of UTF-8 letters (including combining marks), digits, underscores, and at signs (@). It may end with an exclamation point or a question mark. You can also create atoms containing arbitrary characters by enclosing the characters following the colon in double quotes.
 
+- `:atom` => atom / symbol
+-	`​:fred`​  
+- `​:is_binary?`​  
+- `​:var@2`​  
+- `​:<>`​  
+- `​:===`​  
+- `​:'func/3'​`
+​- `​:"long john silver"`​  
+- `​:эликсир​ `  
+- `​:mötley_crüe`
 - `true` => boolean (atom)
 
 Atoms are not garbage collected. Once an atom is created, it is never reclaimed.
@@ -239,9 +250,9 @@ The return of a function will be passed as the first argument to the following.
 
 ## Pattern Matching
 
-In Elixir `=` sign is not just an assign operator, but a **Match Operator**.
+In Elixir `=` sign is not just an assign operator, but a **Match Operator**. It’s like an assertion. It succeeds if Elixir can find a way of making the left-hand side equal the right-hand side.
 
-This means that you assign variables from right side to the left based on patterns defined by the left one. If a pattern does not match a `MatchError` is raised.
+This means that you assign variables from right side to the left based on patterns defined by the left one. If a pattern does not match a `MatchError` is raised. A pattern (the left side) is matched if the values (the right side) have the same structure and if each term in the pattern can be matched to the corresponding term in the values.
 
 This powerful tool is also used to decompose complex objects like tuples, lists, etc into smaller ones:
 
@@ -305,7 +316,7 @@ In order to assert an **empty map** you have to use a guard instead of pattern m
 
 ### Pin Operator
 
-The Pin Operator `^` is used to treat variables the same way non variables with the match operator. In other words, the Pin Operator will evaluate the variable and use its value to **restrict a pattern**, preserving its original value.
+The Pin Operator `^` is used to treat variables the same way non variables with the match operator. In other words, the Pin Operator will evaluate the variable and use its value to **restrict a pattern**, preserving its original value. It force Elixir to use the existing value of the variable in the pattern.
 
 ```elixir
 x = 1 #=> assign 1 to x
