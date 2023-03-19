@@ -789,15 +789,17 @@ The `with` expression serves double duty. First, it allows you to define a local
 - `else` => if some matching clause fails
 
 ```elixir
+height = 100 
 opts = %{width: 10, height: 20}
 with {:ok, width} <- Map.fetch(opts, :width),
-     {:ok, height} <- Map.fetch(opts, :height) do
-  {:ok, width * height}
-else
-  :error ->
-    {:error, :wrong_data}
-end
-#=> {:ok, 200}
+     {:ok, height} <- Map.fetch(opts, :height) do    
+      {:ok, width * height}
+    else
+      :error ->
+        {:error, :wrong_data}
+    end
+#=> {:ok, 200} 
+#The inner variable height is local to the with, and does not affect the variable in the outer scope. 
 ```
 
 ## Recursion
