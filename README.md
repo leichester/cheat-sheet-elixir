@@ -64,7 +64,8 @@ defmodule Math do
   @doc """
   Calculates the sum of two numbers.
   """
-  def sum(a, b), do: a + b
+  def sum(a, b), do: a + b   # `, do: inline_code` or `, do: ()` is the shortcut for `do ... end`. 
+                             # Except `cond do` where no `,` 
 end
 
 h Math
@@ -110,7 +111,7 @@ Inside iex
 - `c/1` => compiles a `.ex` file into the current directory
 - `recompile/0` => recompiles the current project
 - `v/1` => retrieves the nth value from the history
-
+- `#iex:break` => cancel multiple line command
 ## Basic Types
 
 ### Integer
@@ -780,9 +781,11 @@ cond do: (
 
 ## The `with` macro
 
+The `with` expression serves double duty. First, it allows you to define a local scope for variables. If you need a couple of temporary variables when calculating something, and you don’t want those variables to leak out into the wider scope, use with. Second, it gives you some control over pattern-matching failures using `->`. 
+
 - `with` => macro to combine multiple match clauses
-- `<-` => a matching clause, on the left
-- `=` => bare expression is allowed
+- `<-` => a matching clause, on the left. IF match fails, it returns the value on right that couldn’t be matched
+- `=` => bare expression is allowed. If the match had failed, a `MatchError` exception would be raised
 - `else` => if some matching clause fails
 
 ```elixir
