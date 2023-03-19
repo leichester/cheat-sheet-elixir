@@ -275,17 +275,17 @@ If the types are the same or are compatible (for example, 3 > 2 or 3.0 < 5), the
 ## Join Operators
 
 ```elixir  
-   binary1 <> binary2   ​# concatenates two binaries (Later we'll​
-​ 	                     ​# see that binaries include strings.)​
-​ 	list1 ++ list2       ​# concatenates two lists​
-​ 	list1 -- list2       ​# removes elements of list 2 from a copy of list 1
+  binary1 <> binary2  ​# concatenates two binaries (Later we'll​
+                      ​# see that binaries include strings.)​
+  list1 ++ list2      ​# concatenates two lists​
+  list1 -- list2      ​# removes elements of list 2 from a copy of list 1
 ```
 ## In operator
 
 ```elixir  
-	a ​in​ enum            ​# tests if a is included in enum (for example,​
-​ 	                    ​# a list, a range, or a map). For maps, a should​
-​ 	                    ​# be a {key, value} tuple.
+  a ​in​ enum       ​# tests if a is included in enum (for example,​
+                  ​# a list, a range, or a map). For maps, a should​
+                  ​# be a {key, value} tuple.
 ```
 ## Pipe Operator
 
