@@ -32,6 +32,7 @@ In Elixir a function is usually described with its arity (number of arguments), 
 - `foo! function may raise an error` => the result of a `foo!` is not wrapped in a tuple and it may raises an exception
 - Exceptions/Errors are **not used** for controlling flow
 - Elixir uses **fail fast** idea and the supervision trees to control process health and possible restart processes.
+- Elixir identifiers must start with a letter or underscore, optionally followed by letters, digits, and underscores. The identifiers may end with a question mark or an exclamation mark. Module, record, protocol, and behavior names start with an uppercase letter and are BumpyCase. All other identifiers start with a lowercase letter or an underscore, and by convention use underscores between words.
 
 ## Comments
 
@@ -129,7 +130,7 @@ There must be at least one digit before and after the decimal point. Floats are 
 
 ### Atom
 
-We write them using a leading colon (:), which can be followed by an atom word or an Elixir operator. An atom word is a sequence of UTF-8 letters (including combining marks), digits, underscores, and at signs (@). It may end with an exclamation point or a question mark. You can also create atoms containing arbitrary characters by enclosing the characters following the colon in double quotes.
+We write atom using a leading colon (:), which can be followed by an atom word or an Elixir operator. An atom word is a sequence of UTF-8 letters (including combining marks), digits, underscores, and at signs (@). It may end with an exclamation point or a question mark. You can also create atoms containing arbitrary characters by enclosing the characters following the colon in double quotes.
 
 - `:atom` => atom / symbol
 -	`​:fred`​  
@@ -152,10 +153,12 @@ Atoms are not garbage collected. Once an atom is created, it is never reclaimed.
 
 ### Tuple
 
-- `{1, 2, 3}` => tuple
+A tuple is an ordered collection of values.
+- `{1, 2, 3, :ok}` => tuple
 
 ### List
 
+A list is effectively a linked data structure.
 - `[1, 2, 3]` => list
 - `'elixir'` => char list
 
@@ -164,12 +167,39 @@ Atoms are not garbage collected. Once an atom is created, it is never reclaimed.
 
 ### Map
 
+A map is a collection of key/value pairs.
 - `%{name: "Mary", age: 29}` => map short notation (keys must be atoms)
 - `%{:name => "Mary", :age => 29}` => map long notation
 
+### Date
+
+The Date type holds a year, a month, a day, and a reference to the ruling calendar
+- `{​:ok​, d1} = Date.new(2018, 12, 25) # {:ok, ~D[2018-12-25]}`
+- `d2 = ​~​D[2018-12-25]` => `~D` sigil syntax
+- `Date.day_of_week(d1) # 2`
+- `Date.add(d1, 7) # 	~D[2019-01-01]`
+
+Elixir can also represent a range of dates:
+- `first_half = Date.range(~D[2018-01-01], ~D[2018-06-30])  #DateRange<~D[2018-01-01], ~D[2018-06-30]>`
+- `~​D[2018-03-15] ​in​ first_half # true`
+
+### Time
+
+The Time type contains an hour, a minute, a second, and fractions of a second. The fraction is stored as a tuple containing microseconds and the number of significant digits. (The fact that time values track the number of significant digits in the seconds field means that `~T[12:34:56.0]` is not equal to `~T[12:34:56.00]`.)
+- `{​:ok​, t1} = Time.new(12, 34, 56)`
+- `​ t2 = ​~​T[12​:34:56​.78]` => `~T` sigil syntax
+- `Time.add(~T[00:00:00.000], 86_399_999, :millisecond)  # ~T[23:59:59.999]`
+
+There are two date/time types: `DateTime` and `NaiveDateTime`. The naive version contains just a date and a time; `DateTime` adds the ability to associate a time zone. The `~N[...]` sigil constructs `NaiveDateTime` structs.
+
 ### PID
 
+A PID is a reference to a local or remote process.
 - `self() #=> #PID<0.80.0>` => current Process id
+
+### Port
+
+A port is a reference to a resource (typically external to the application) that you’ll be reading or writing.
 
 ### Function
 
@@ -217,10 +247,10 @@ Atoms are not garbage collected. Once an atom is created, it is never reclaimed.
 
 Falsy in Elixir is `false` and `nil`, otherwise will be truthy.
 
-- `==` => equals
+- `==` => equals (`1 == 1.0` is true)
 - `!=` => different
 - `===` => strict equal (integer with float)
-- `!==` => strict different (integer with float)
+- `!==` => strict different (integer with float `1 !== 1.0` is true)
 - `<` => less
 - `<=` => less or equal
 - `>` => greater
@@ -232,7 +262,15 @@ Falsy in Elixir is `false` and `nil`, otherwise will be truthy.
 - `or` => boolean or
 - `not` => boolean not
 
-It's possible to compare different data types and that's the sorting order: `number < atom < reference < functions < port < pid < tuple < list < bit string`.
+Boolean and Relaxed Boolean operators
+- `a ​or​ b     ​# true if a is true; otherwise b​` 
+​- `a ​and​ b    ​# false if a is false; otherwise b​`
+​- `​not​ a      ​# false if a is true; true otherwise`
+- `a || b    ​# a if a is truthy; otherwise b​`
+​- `a && b    ​# b if a is truthy; otherwise a`​
+​- `​!​a        ​# false if a is truthy; otherwise true`
+
+If the types are the same or are compatible (for example, 3 > 2 or 3.0 < 5), the comparison uses natural ordering. Otherwise comparison is based on type according to this rule: `number < atom < reference < functions < port < pid < tuple < map < list < bit string`.
 
 ## Pipe Operator
 
@@ -415,7 +453,7 @@ String is a Binary of code points where all elements are valid characters. Strin
 
 ## Tuples
 
-Tuple is a list that is stored contiguously in memory.
+Tuple is stored contiguously in memory.
 
 - `{:ok, "hello"}`
 - `tuple_size({:ok, "hello"})` => tuple size
@@ -437,7 +475,7 @@ Tuple is a list that is stored contiguously in memory.
 
 **Lists** implements `Enumerable` protocol.
 
-List is a linked list structure where each element points to the next one in memory. When subtraction just the first ocurrence will be removed.
+List is a linked list structure where each element points to the next one in memory. When subtraction just the first ocurrence will be removed. A list may either be empty or consist of a head and a tail. The head contains a value and the tail is itself a list.
 
 - `[:ok, "hello"]`
 - `[97 | [1, 6, 9]]` => prepend
@@ -489,10 +527,10 @@ A Char List is a List of code points where all elements are valid characters. Ch
 
 ## Keyword Lists
 
-Keyword list is a list of tuples where first elements are atoms. When fetching by key the first match will return. If a keyword list is the last argument of a function the square brackets `[` are optional.
+Keyword list is a list of key/value pairs. It is a list of tuples where first elements are atoms. When fetching by key the first match will return. If a keyword list is the last argument of a function the square brackets `[` are optional.
 
-- `[a: 5, b: 3]` => keyword list short notation
-- `[{:a, 5}, {:b, 3}]` => keyword list long notation
+- `[a: 5, b: 3]` => keyword list short notation. 
+- `[{:a, 5}, {:b, 3}]` => keyword list long notation (a list of two-value tuples)
 - `[{:a, 6} | [b: 7]] # [a: 6, b: 7]` => prepend
 - `[a: 5] ++ [a: 7] # [a: 5, a: 7]` => concatenation
 - `[a: 5, b: 7] -- [a: 5] # [b: 7]` => subtraction first ocurrences
@@ -516,13 +554,13 @@ Keyword list is a list of tuples where first elements are atoms. When fetching b
 
 **Maps** implements `Enumerable` protocol.
 
-Map holds a key value structure.
+Map holds a key value collection. Why do we have both maps and keyword lists? Maps allow only one entry for a particular key, whereas keyword lists allow the key to be repeated. Maps are efficient (particularly as they grow), and they can be used in Elixir’s pattern matching. In general, use keyword lists for things such as command-line parameters and passing around options, and use maps when you want an associative array.
 
 - `%{name: "Mary", age: 29}` => map short notation (keys must be atoms)
 - `%{:name => "Mary", :age => 29}` => map long notation
 - `%{name: "Mary", age: 29}[:name]` => fetch `:name` hash notation
 - `%{name: "Mary", age: 29}[:born]` => returns nil when do not find in the hash notation
-- `%{name: "Mary", age: 29}.name` => fetch `:name` short notation
+- `%{name: "Mary", age: 29}.name` => fetch `:name` short notation (this notation is only for key that are atom)
 - `%{name: "Mary", age: 29}.born # ** (KeyError)` => blows an error when key does not exists
 - `%{%{name: "Mary", age: 29} | age: 31}` => update value for existing key
 - `%{%{name: "Mary", age: 29} | born: 1990} # ** (KeyError)` => blows an error when updating non existing key
@@ -563,7 +601,7 @@ Map.keys(john) #=> [:__struct__, :age, :name]
 
 ## Ranges
 
-Ranges are `Struct`.
+Ranges are `Struct`. Ranges are represented as start..end, where start and end are integers.
 
 - `range = 1..10` => range definition
 - `Enum.reduce(1..3, 0, fn i, acc -> i + acc end) #=> 6` => range used in a reduce function to sum them up
