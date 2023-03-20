@@ -927,6 +927,7 @@ end
 calc.(-1, 6) #=> 5
 calc.(9, 5) #=> 45
 ```
+You can define different implementations, depending on the type and contents of the arguments passed. (You cannot select based on the number of arguments—each clause in the anonymous function definition must have the same number of parameters.)
 
 ## Modules And Named Functions
 
