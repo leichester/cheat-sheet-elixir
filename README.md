@@ -301,7 +301,7 @@ The return of a function will be passed as the first argument to the following.
   Enum.sum
 #=> 7500
 ```
-
+You should always use parentheses around function parameters in pipelines.
 ## Pattern Matching
 
 In Elixir `=` sign is not just an assign operator, but a **Match Operator**. It’s like an assertion. It succeeds if Elixir can find a way of making the left-hand side equal the right-hand side.
@@ -897,6 +897,8 @@ Elixir automatically carry with them the bindings of variables in the scope in w
 
 ## Modules And Named Functions
 
+Modules provide namespaces for things you define. We’ve already seen them encapsulating named functions. They also act as wrappers for macros, structs, protocols, and other modules. If we want to reference a function defined in a module from outside that module, we need to prefix the reference with the module’s name. All modules are defined at the top level. When we define a module inside another, Elixir simply prepends the outer module name to the inner module name, putting a dot between the two. This means we can directly define a nested module. there’s no particular relationship between the nested modules.
+
 - `defmodule` => define Modules
 - `def`  => define functions inside Modules
 - `defp`  => define private functions inside Modules. Private functions can be called only within the module that declares it.
@@ -933,6 +935,12 @@ Special Module attributes:
 - `@doc`
 - `@behaviour`
 - `@before_compile`
+
+Module name: When you write a name starting with an uppercase letter, such as `IO`, Elixir converts it internally into an atom of the same name with `Elixir.` prepended. So `IO` becomes `Elixir.IO`
+```elixir
+ :"Elixir.IO" === IO
+ :"Elixir.IO".puts 123
+```
 
 Function calls and pattern matching:  we write the function multiple times, each time with its own parameter list and body. When you call a named function, Elixir tries to match your arguments with the parameter list of the first definition (clause). 
 ```elixir
@@ -1408,8 +1416,10 @@ In order to facilitate code reuse Elixir has: `alias`, `require`, `import` (dire
 
 All modules are defines inside `Elixir` namespace but it can be omitted for convenience.
 
-`alias`, `require` and `import` are lexically scoped, which means that it will be valid just inside the scope it was defined. This is **not a global scope**.
+The three directives `alias`, `require` and `import` are lexically scoped, which means that it will be valid just inside the scope it was defined. This is **not a global scope**.
 
+The `import` directive brings a module’s functions and/or macros into the current scope. 
+The `alias` directive creates an alias for a module. One obvious use is to cut down on typing.
 `require` is usually used to require Elixir macro code:
 
 ```elixir
@@ -1462,6 +1472,8 @@ quote do: 2 * 2 == 4
 ```
 
 ## Erlang libraries
+
+If you’re looking for a library to use in your app, you’ll want to look first for existing Elixir modules. If that fails, search for a built-in Erlang library or search the web. Be aware that the Erlang documentation for a library follows Erlang conventions. Variables start with uppercase letters, and identifiers that start with a lowercase letter are atoms.
 
 Elixir provider some Erlang modules as atoms.
 
