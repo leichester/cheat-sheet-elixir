@@ -929,6 +929,28 @@ calc.(9, 5) #=> 45
 ```
 You can define different implementations, depending on the type and contents of the arguments passed. (You cannot select based on the number of arguments—each clause in the anonymous function definition must have the same number of parameters.)
 
+Elixir automatically carry with them the bindings of variables in the scope in which they are defined. This is a closure—the scope encloses the bindings of its variables, packaging them into something that can be saved and used later.
+
+```elixir
+  greeter = ​fn​ name -> (​fn​ -> ​'​​Hello ​​#{​name​}​​'​ ​end​) ​end
+  dave_greeter = greeter.(​'​​Dave'​)
+  dave_greeter.()  #'Hello Dave'
+
+  ​defmodule​ Greeter ​do​
+​ 	  ​def​ for(name, greeting) ​do​
+​ 	    ​fn​
+​ 	      (^name) -> ​'​​#{​greeting​}​​ ​​#{​name​}​​'​
+​ 	      (_)     -> ​'​​I don't know you'​
+​ 	    ​end​
+​ 	  ​end​
+​ 	​end​
+​ 	
+​ 	mr_valim = Greeter.for(​'​​José'​, ​'​​Oi!'​)
+​ 	
+​ 	IO.puts mr_valim.(​'​​José'​)    ​# => Oi! José​
+​ 	IO.puts mr_valim.(​'​​Dave'​)    ​# => I don't know you
+```
+
 ## Modules And Named Functions
 
 - `defmodule` => define Modules
