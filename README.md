@@ -367,6 +367,7 @@ In order to assert an **empty map** you have to use a guard instead of pattern m
   end
 ).(%{}) #=> "empty map"
 ```
+Elixir tries to match arguments as right value to the parameters as left pattern.
 
 ### Pin Operator
 
@@ -906,9 +907,9 @@ for k <- [:foo, :bar], v <- 1..5, into: [], do: {k, v}
 
 ## Anonymous Functions
 
-- `fn` => define functions
+- `fn...end` => define anonymous functions, like the quotes that surround a string literal.
 - `->` => one line function definition
-- `.` => call a function
+- `.(arguments)` => call an anonymous function
 - `when` => guards
 
 ```elixir
