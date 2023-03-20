@@ -416,37 +416,6 @@ Available delimiters for `Sigil`: `/`, `|`, `"`, `'`, `(`, `[`, `{`, `<`.
 ~w(one two three)c #=> ['one', 'two', 'three']
 ~w(one two three)a #=> [:one, :two, :three]
 ```
-
-<!-- ## Bit Strings
-
-- `<<97::4>>` => short notation with 4 bits
-- `<<97::size(4)>>` => long notation with 4 bits
-- `byte_size(<<5::4>>)` => bit string byte size
-
-### Performance for Bit Strings:
-
-#### cheap functions:
-
-- `byte_size(<<97::4>>)`
-
-#### expensive functions:
-
-## Binaries
-
-Binaries are 8 bits multiple Bit Strings. Binaries are 8 bits by default.
-
-- `<<97>>` => short notation with 8 bits
-- `<<97::size(8)>>` => long notation with 8 bits
-- `<>` => concatenate binaries/strings
-
-### Performance for Binaries:
-
-#### cheap functions:
-
-- `byte_size(<<97>>)`
-
-#### expensive functions: -->
-
 ## Strings
 
 String is a Binary of code points where all elements are valid characters. Strings are surrounded by double-quotes and are encoded in `UTF-8` by default.
@@ -516,31 +485,6 @@ List is a linked list structure where each element points to the next one in mem
 - `[1, 5] -- [9, 5] # [1]` => subtraction first occurrences
 - `length([1, 4])`
 - `:foo in [:foo, :bar] #=> true` => in operator
-
-<!-- ## Char List
-
-A Char List is a List of code points where all elements are valid characters. Char Lists are surrounded by single-quote and are usually used as arguments to some old Erlang code.
-
-- `'ab'` => char list
-- `[97, 98]` => `'ab'`
-- `[?a, ?b]` => `'ab'`
-- `?x` => code points (ASCII code) for letter `x`
-- `'hello' ++ 'world' # 'helloworld'` => concatenation
-- `'hello' -- 'world' # 'hel'` => subtraction first occurrences
-- `?l in 'hello' #=> true` => in operator
-
-### Performance for Char Lists:
-
-#### cheap functions:
-
-- `[?H | 'ello']` => prepend
-
-#### expensive functions:
-
-- `'hello' ++ 'world' # 'helloworld'` => concatenation
-- `'hello' -- 'world' # 'hel'` => subtraction first occurrences
-- `length('Hello')`
-- `?l in 'hello' #=> true` => in operator -->
 
 ## Keyword Lists
 
@@ -738,6 +682,7 @@ if sky == :blue, do: (
   :cloudy
 )
 ```
+The `do…end` form is just a lump of syntactic sugar—during compilation it is turned into the `do:` form. (And the `do:` form itself is nothing special; it is simply a term in a keyword list, so it needs `,` before it.) Typically people use the `do:` syntax for single-line blocks, and `do…end` for multiline ones.
 
 ## Conditional Flows (if/else/case/cond)
 
@@ -765,8 +710,7 @@ case sky, do: (
   _                  -> :check_wheather_channel
 )
 ```
-
-On **when guards** short-circuiting operators `&&`, `||` and `!` are **not** allowed.
+Guard clauses are predicates that are attached to a function definition using one or more `when` keywords. On **when guards** short-circuiting operators `&&`, `||` and `!` are **not** allowed.
 
 ### cond
 
@@ -955,7 +899,7 @@ Elixir automatically carry with them the bindings of variables in the scope in w
 
 - `defmodule` => define Modules
 - `def`  => define functions inside Modules
-- `defp`  => define private functions inside Modules
+- `defp`  => define private functions inside Modules. Private functions can be called only within the module that declares it.
 - `when` => guards
 - `@` => module attributes
 - `__info__(:functions)` => list functions inside a module
@@ -990,8 +934,16 @@ Special Module attributes:
 - `@behaviour`
 - `@before_compile`
 
+Function calls and pattern matching:  we write the function multiple times, each time with its own parameter list and body. When you call a named function, Elixir tries to match your arguments with the parameter list of the first definition (clause). 
+```elixir
+	​defmodule​ Factorial ​do​
+    ​def​ of(0), ​do​: 1
+    ​def​ of(n), ​do​: n * of(n-1)
+  ​end
+```
 ## Default Argument
 
+Only for named function. If the count of passed arguments is greater than the number of required parameters, Elixir uses the excess to override the default values of some or all parameters. Parameters are matched left to right.
 - `\\` => default argument
 
 ```elixir
@@ -1020,7 +972,7 @@ DefaultTest.dowork #=> :ok
 # hello
 ```
 
-Function with multiple clauses and a default value requires a **function head** where default values are set:
+Function with multiple clauses and default values:  Add a **function head** with no body that contains the default parameters, and use regular parameters for the rest. The defaults will apply to all calls to the function.
 
 ```elixir
 defmodule Concat do
