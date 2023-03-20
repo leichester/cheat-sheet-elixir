@@ -1042,6 +1042,8 @@ IO.puts Concat.join("Hello", "world", "_") #=> Hello_world
 
 ## Function Capturing
 
+The `&` operator converts the expression that follows into a function. Inside that expression, the placeholders &1, &2, and so on correspond to the first, second, and subsequent parameters of the function. So `&(&1 + &2)` will be converted to `fn p1, p2 -> p1 + p2 end`. There’s a second form of the `&` function capture operator. You can give it the name and arity (number of parameters) of an existing function, and it will return an anonymous function that calls it. The arguments you pass to the anonymous function will in turn be passed to the named function.
+
 - `&` => function capturing
 - `&1` => 1st argument
 
@@ -1057,9 +1059,10 @@ a.(3, 4) #=> 12
 
 (&Kernel.is_atom(&1)).(:foo) #=> true
 (&Kernel.is_atom/1).(:foo) #=> true
-(&{:ok, [&1]}).(:foo) #=> {:ok, [:foo, :bar]}
+(&{:ok, [&1]}).(:foo) #=> {:ok, [:foo, :bar]} #[] and {} are operators in Elixir
 (&[&1, &2]).(:foo, :bar) #=> [:foo, :bar]
 (&[&1 | [&2]]).(:foo, :bar) #=> [:foo, :bar]
+(&​"bacon and ​​#{​&1​}​​").(​"​custard"​) #=> "bacon and custard"
 ```
 
 ## Behaviours
