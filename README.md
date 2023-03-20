@@ -941,7 +941,7 @@ Elixir automatically carry with them the bindings of variables in the scope in w
   ​defmodule​ Greeter ​do​
     ​def​ for(name, greeting) ​do​
     ​  fn​
-        (^name) -> ​'​​#{​greeting​}​​ ​​#{​name​}​​'​
+        (^name) -> ​'​​#{​greeting​}​​ ​​#{​name​}​​'    #Pinned Values as Function Parameters​
         (_)     -> ​'​​I don't know you'​
     ​  end​
     ​end​
