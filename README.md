@@ -936,6 +936,8 @@ Elixir automatically carry with them the bindings of variables in the scope in w
   dave_greeter = greeter.(​'​​Dave'​)
   dave_greeter.()  #'Hello Dave'
 
+###
+
   ​defmodule​ Greeter ​do​
     ​def​ for(name, greeting) ​do​
     ​  fn​
@@ -944,9 +946,9 @@ Elixir automatically carry with them the bindings of variables in the scope in w
     ​  end​
     ​end​
   ​end​
-mr_valim = Greeter.for(​'​​José'​, ​'​​Oi!'​)
-IO.puts mr_valim.(​'​​José'​)    ​# => Oi! José​
-IO.puts mr_valim.(​'​​Dave'​)    ​# => I don't know you
+  mr_valim = Greeter.for(​'​​José'​, ​'​​Oi!'​)
+  IO.puts mr_valim.(​'​​José'​)    ​# => Oi! José​
+  IO.puts mr_valim.(​'​​Dave'​)    ​# => I don't know you
 ```
 
 ## Modules And Named Functions
