@@ -342,6 +342,9 @@ first..last = 1..5
 %{} = %{a: 5} # empty map matches any map
 %{a: x, b: 5} = %{b: 5, a: 7, c: 9}
 
+[a, a] = [1, 1] # Once a variable has been bound to a value in the matching process, it keeps that value for the remainder of the match.
+[b, b] = [1, 2] #=> ** (MatchError)
+
 defmodule User do
   defstruct name: "John", age: 27
 end
@@ -526,6 +529,8 @@ Map holds a key value collection. Why do we have both maps and keyword lists? Ma
 - `%{%{name: "Mary", age: 29} | age: 31}` => update value for existing key
 - `%{%{name: "Mary", age: 29} | born: 1990} # ** (KeyError)` => blows an error when updating non existing key
 - `map_size(%{name: "Mary"}) #=> 1` => map size
+- `%{age: age} = %{name: "Mary", age: 29}` => pattern matching
+- `%{ item => :ok} = %{1 => :ok, 2 => :error}  # ** (CompileError)` => pattern matching can't bind keys to variables.  
 
 ### Performance for Maps:
 
