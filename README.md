@@ -811,11 +811,12 @@ Enum.map([1, 2, 3], &(&1 * 2)) #=> [2, 4, 6]
 
 ## Comprehension -> the for loop
 
-`Comprehension` is a syntax sugar for the very powerful `for special form`. You can have **generators** and **filters** in that.
+`Comprehension` is a syntax sugar for the very powerful `for special form`. You can have **generators** and **filters** in that. A generator `pattern <- enumerable_thing` specifies how you want to extract values from a collection. Any variables matched in the pattern are available in the rest of the comprehension (including the block). A filter is a predicate that truthy result will pass.
 
 - `for` => `Comprehension`
 - `<-` => **generators**
-- `:into` => change return to another `Collectable` type
+- `,` => separate generators and/or filters
+- `:into` => change list return to another `Collectable` type
 
 You can iterate over `Enumerable` what makes so close to a regular `for` loop on other languages:
 
@@ -846,18 +847,19 @@ You can have **filters** to filter **truthy** elements:
 ```elixir
 for dir  <- [".", "/"],
     file <- File.ls!(dir),
-    path = Path.join(dir, file),
+    path = Path.join(dir, file),  #truthy
     File.regular?(path) do
   "dir=#{dir}, file=#{file}, path=#{path}"
 end
 #=> ["dir=., file=README.md, path=./README.md", "dir=/, file=.DS_Store, path=/.DS_Store"]
 ```
 
-You can use `:into` to change the return type:
+You can use `:into` to change the list return type:
 
 ```elixir
-for k <- [:foo, :bar], v <- 1..5, into: %{}, do: {k, v}
-#=> %{bar: 5, foo: 5}
+for k <- [:foo, :bar], v <- 1..5, into: %{}, do: {k, v}  # or
+for k <- [:foo, :bar], v <- 1..5, into: Map.new, do: {k, v}
+#=> %{bar: 5, foo: 5}  keys are unique inside map
 for k <- [:foo, :bar], v <- 1..5, into: [], do: {k, v}
 #=> [foo: 1, foo: 2, foo: 3, foo: 4, foo: 5, bar: 1, bar: 2, bar: 3, bar: 4, bar: 5]
 ```
