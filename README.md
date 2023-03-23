@@ -524,7 +524,7 @@ Map holds a key value collection. Why do we have both maps and keyword lists? Ma
 - `%{:name => "Mary", :age => 29}` => map long notation
 - `%{name: "Mary", age: 29}[:name]` => fetch `:name` hash notation
 - `%{name: "Mary", age: 29}[:born]` => returns nil when do not find in the hash notation
-- `%{name: "Mary", age: 29}.name` => fetch `:name` short notation (this notation is only for key that are atom)
+- `%{name: "Mary", age: 29}.name` => fetch `:name` short notation (this notation is only for maps with key that are atom)
 - `%{name: "Mary", age: 29}.born # ** (KeyError)` => blows an error when key does not exists
 - `%{%{name: "Mary", age: 29} | age: 31}` => update value for existing key
 - `%{%{name: "Mary", age: 29} | born: 1990} # ** (KeyError)` => blows an error when updating non existing key
@@ -545,14 +545,19 @@ Map holds a key value collection. Why do we have both maps and keyword lists? Ma
 
 ## Structs
 
-Structs are built in top of Map.
+Structs are built in top of Map. It is a typed map—a map that has a fixed set of fields and default values for those fields, and that you can pattern-match by type as well as content. The keys must be atoms and because these maps don’t have `Dict` capabilities. The name of the module becomes the name of the map type.  You use the `defstruct` macro to define the struct’s members. You can  add struct-specific behavior inside module. Structs store a “special” field named `__struct__` that holds the name of the struct. We referred to structs as bare maps because none of the protocols implemented for maps are available for structs.
 
 - `defstruct` => define a struct
 
 ```elixir
 defmodule User do
   defstruct name: "John", age: 27
+
+  ​def​ print_vip_badge(%User{​name:​ name}) ​when​ name !=  ""​ ​do​
+    IO.puts "'​​Very cheap badge for ​​#{​name​}​​'"
+  ​end
 end
+
 john = %User{} #=> %User{age: 27, name: "John"}
 mary = %User{name: "Mary", age: 25} #=> %User{age: 25, name: "Mary"}
 meg = %{john | name: "Meg"} #=> %User{age: 27, name: "Meg"}
