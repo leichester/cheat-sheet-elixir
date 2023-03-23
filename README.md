@@ -572,7 +572,7 @@ Map.keys(john) #=> [:__struct__, :age, :name]
 
 ## Ranges
 
-Ranges are `Struct`. Ranges are represented as start..end, where start and end are integers.
+Ranges are `Struct`. Ranges are represented as start..end, where start and end are integers. Range implements the `Enumerable` protocol.
 
 - `range = 1..10` => range definition
 - `Enum.reduce(1..3, 0, fn i, acc -> i + acc end) #=> 6` => range used in a reduce function to sum them up
@@ -659,9 +659,9 @@ users = update_in users[:mary].languages, &List.delete(&1, "Clojure")
 
 ## Enums and Streams
 
-**Lists** and **Maps** are Enumerables.
+Collections are things that can be iterated. They are said to implement the `Enumerable` protocol. **Lists**, **Range** and **Maps** are Enumerables. NOT **Struct** 
 
-`Enum` module perform **eager** operations, meanwhile `Stream` module perform **lazy** operations.
+Elixir provides two modules that have a bunch of iteration functions to work on enumerable collection: the `Enum` module and `Stream` module. `Enum` module perform **eager** operations, meanwhile `Stream` module perform **lazy** operations.
 
 ```elixir
 # eager Enum
