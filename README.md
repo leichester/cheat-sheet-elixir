@@ -665,10 +665,13 @@ Elixir provides two modules that have a bunch of iteration functions to work on 
 
 ```elixir
 # eager Enum
-1..100 |> Enum.map(&(&1 * 3)) |> Enum.sum #=> 15150
+[ 1, 2, 3, 4, 5 ]  ​#=> [ 1, 2, 3, 4, 5 ]
+|> Enum.map(&(&1*&1))  ​#=> [ 1, 4, 9, 16, 25 ]
 
 # lazy Stream
-1..100 |> Stream.map(&(&1 * 3)) |> Enum.sum #=> 15150
+[ 1, 2, 3, 4, 5 ]  ​#=> [ 1, 2, 3, 4, 5 ]
+|> Stream.map(&(&1*&1)) #=> Stream<[enum: [1, 2, 3, 4, 5], funs: [#Function<46.3851/1 in Stream.map/2>] ]>
+|> Enum.to_list ​#=> [ 1, 4, 9, 16, 25 ]
 ```
 
 ## do/end Keyword List and Block Syntax
