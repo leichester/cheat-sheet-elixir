@@ -412,7 +412,10 @@ Available delimiters for `Sigil`: `/`, `|`, `"`, `'`, `(`, `[`, `{`, `<`.
 - `~r/hello/i` => `i` modifies to case insensitive
 - `~w` => list of string words (modifiers: )
 - `~w[foo bar]c` => `c` modifies to list of char lists
-- `~w[foo bar]a` => `c` modifies to list of atoms
+- `~w[foo bar]a` => `a` modifies to list of atoms
+- `~D` => A Date in the format `yyyy-mm-dd`
+- `~N` => A naive (raw) DateTime in the format `yyyy-mm-dd hh:mm:ss[.ddd]`
+- `~T` => A Time in the format `hh:mm:ss[.dddd]`
 
 ```elixir
 ~w(one two three) #=> ["one", "two", "three"]
@@ -700,10 +703,16 @@ The `do…end` form is just a lump of syntactic sugar—during compilation it is
 ## Conditional Flows (if/else/case/cond)
 
 ### if / else
-
+Take two parameters: a condition and a keyword list, which can contain the keys do: and else:.
 ```elixir
 sky = :gray
 if sky == :blue, do: :sunny, else: :cloudy
+## syntactic sugar
+if sky == :blue do
+ :sunny
+else
+ :cloudy
+end
 ```
 
 ### unless / else
@@ -718,12 +727,12 @@ unless sky != :blue, do: :sunny, else: :cloudy
 ```elixir
 sky = {:gray, 75}
 case sky, do: (
-  {:blue, _}         -> :sunny
-  {_, t} when t > 80 -> :hot
+  {:blue, _} = _item       -> :sunny
+  _item = {_, t} when t > 80 -> :hot
   _                  -> :check_wheather_channel
 )
 ```
-Guard clauses are predicates that are attached to a function definition using one or more `when` keywords. On **when guards** short-circuiting operators `&&`, `||` and `!` are **not** allowed.
+Guard clauses are predicates that are attached to a function definition using one or more `when` keywords. On **when guards** short-circuiting operators `&&`, `||` and `!` are **not** allowed. Type-check function: is_atom/1, ... and some other functions are allowed.
 
 ### cond
 
