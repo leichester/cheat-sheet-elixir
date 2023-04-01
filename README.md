@@ -1476,8 +1476,14 @@ end
 
 See example in: https://stackoverflow.com/questions/28491306/elixir-use-vs-import
 ## Meta Programming
+Macros are compile-time constructs that are invoked with Elixir's AST as input and a superset of Elixir's AST as output. When a macro is first declared, the arguments of that macro are automatically converted into AST so that you don't need to parse the arguments manually. The arguments will not be evaluated beforehand like regular function. The macro should return an AST as output (and it is). However, this AST as output is compiled and executed once the macro is called. 
 
-- `quote` => shows AST (Abstract Syntax Tree)
+- `quote do:` => shows AST (Abstract Syntax Tree) of an expression
+- `unquote(arg)` => evaluates its argument, which is an expression, and injects the result (as an AST) into the AST being built. 
+
+Abstract Syntax Tree(AST) or Quote Expression: atoms, numbers, lists (including keyword lists), binaries, and tuples with two elements are represented internally as themselves. All other Elixir code is represented by a three-element tuple. 
+- variable: `{name, meta, contex}` => `# {:foo, [], Elixir}`
+- call: `{function, context/meta, args} ` => `# {:+, [context: Elixir, import: Kernel], [1, 2]}`
 
 ```elixir
 quote do: 2 * 2 == 4
