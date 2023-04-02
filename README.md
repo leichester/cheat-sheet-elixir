@@ -1475,6 +1475,7 @@ end
 `use Module` first `requires module` and then calls the `__using__` macro on Module.
 
 See example in: https://stackoverflow.com/questions/28491306/elixir-use-vs-import
+
 ## Meta Programming
 Macros are compile-time constructs that are invoked with Elixir's AST as input and a superset of Elixir's AST as output. When a macro is first declared, the arguments of that macro are automatically converted into AST so that you don't need to parse the arguments manually. The arguments will not be evaluated beforehand like regular function. The macro should return an AST as output (and it is). However, this AST as output is compiled and executed once the macro is called. 
 
@@ -1499,6 +1500,51 @@ quote do: 2 * 2 == 4
 #=>     4
 #=>   ]
 #=> }
+```
+The compilation process can be broken down into the following phases:
+
+1. Parsing — The Elixir source code (program) is parsed into an AST, which we will call the initial AST.
+2. Expansion — The initial AST is scanned and macro calls are identified. Macros are executed. Their output (AST) is injected and expanded into the callsite. Expansion occurs recursively, and a final AST is generated.
+3. Bytecode generation phase — After the final AST is generated, the compiler performs an additional set of operations that eventually generate and execute BEAM VM bytecode.
+
+Contexts in Macros: Macros contain two contexts — a macro context and a caller context.  
+```elixir
+defmacro foo do
+  # This is the macro's context, this is executed when the macro is called
+ 
+  # This is the return value of the macro (AST)
+  quote do
+    # This is the caller's context, this is executed when the callsite is called
+  end
+end
+```
+The macro context is evaluated during compile-time and treated as a regular function body. It executes within and is 'owned' by its containing module. The caller context is injected into the callsite, so it is 'owned' by the caller. It is evaluated whenever the callsite is evaluated.
+```elixir
+defmodule Foo do
+
+  defmacro foo do
+    IO.puts("macro")
+ 
+    quote do
+      IO.puts("caller")
+    end
+  end
+end
+ 
+defmodule Bar do
+  
+  require Foo
+ 
+  def execute do
+    IO.puts("execute")
+    Foo.foo
+  end
+end
+ 
+# macro  #when compile module Bar, regular function's def body is also compiled (set AST). as it calls macro Foo.foo, evaluated macro context and injected caller context. 
+# iex(1)> Bar.execute
+# execute
+# caller
 ```
 
 ## Erlang libraries
